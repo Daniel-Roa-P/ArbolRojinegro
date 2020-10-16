@@ -21,11 +21,12 @@ public class Arbol {
     
     }
     
-    public void insertar(int valor) {
+    public void insertar(int valor, String cadena) {
 
         Nodo nodo = new Nodo();
         nodo.padre = null;
         nodo.llave = valor;
+        nodo.info = cadena;
         nodo.izquierda = nodoSentinel;
         nodo.derecha = nodoSentinel;
         nodo.color = 1;
@@ -53,6 +54,7 @@ public class Arbol {
         if (y == null) {
             
             raiz = nodo;
+            
         } else if (nodo.llave < y.llave) {
          
             y.izquierda = nodo;
@@ -221,7 +223,7 @@ public class Arbol {
             
     }
 
-    private void borrarNodo(Nodo node, int key) {
+    private void borrarNodo(Nodo node, int llave) {
         
         Nodo z = nodoSentinel;
         Nodo x;        
@@ -229,14 +231,14 @@ public class Arbol {
            
         while (node != nodoSentinel){
                
-            if (node.llave == key) {
+            if (node.llave == llave) {
             
                 z = node;
 
             }
 
             
-            if (node.llave <= key) {
+            if (node.llave <= llave) {
             
                 node = node.derecha;
 
@@ -276,8 +278,7 @@ public class Arbol {
         
             y = minimo(z.derecha);
             yOriginalColor = y.color;        
-            x = y.derecha;
-            
+            x = y.derecha;            
             
             if (y.padre == z) {
             
@@ -310,11 +311,9 @@ public class Arbol {
 
     private void arreglarInsecion(Nodo k){
         
-        Nodo tio;
-            
+        Nodo tio;  
         
         while (k.padre.color == 1) {
-                
         
             if (k.padre == k.padre.padre.derecha) {
                         

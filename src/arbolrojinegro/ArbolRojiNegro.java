@@ -25,7 +25,7 @@ public class ArbolRojiNegro extends JFrame implements ActionListener{
     public JButton botonRetirar  = new JButton("Retirar del arbol");
     private List <Nodo> listaArbol = new ArrayList();
     
-    public JLabel label1 = new JLabel("Ingresar numero(s) que desea añadir");
+    public JLabel label1 = new JLabel("Ingresar numero(s) y cadenas que desea añadir");
     public JLabel label2 = new JLabel("Recorrido Preorden: ");
     public JLabel label3 = new JLabel("Recorrido Inorden: ");
     public JLabel label4 = new JLabel("Recorrido Posorden: ");
@@ -35,6 +35,7 @@ public class ArbolRojiNegro extends JFrame implements ActionListener{
     public JLabel label8 = new JLabel("20171020077");
     
     public JTextField tfIngreso = new JTextField("14,26,35,74,10,2,78,3,97");
+    public JTextField tfCadenas = new JTextField("Juan,Manuel,Daniel,Carlos,Maria,Laura,Natalia,Oscar,Julian");
     public JTextField tfRetiro = new JTextField("");
     public JTextField preOrden = new JTextField();
     public JTextField inOrden = new JTextField();
@@ -43,7 +44,7 @@ public class ArbolRojiNegro extends JFrame implements ActionListener{
     private Arbol arbol = null; 
     private JScrollPane scrollPane = new JScrollPane();
     private JScrollPane scrollPane1 = new JScrollPane();
-    private String entrada;
+    private String entrada, entrada2;
     
     public static void main(String[] args) {
 
@@ -72,6 +73,7 @@ public class ArbolRojiNegro extends JFrame implements ActionListener{
         
         c.add(tfIngreso);
         c.add(tfRetiro);
+        c.add(tfCadenas);
         c.add(preOrden);
         c.add(inOrden);
         c.add(posOrden);
@@ -86,7 +88,7 @@ public class ArbolRojiNegro extends JFrame implements ActionListener{
         botonRetirar.addActionListener(this);
         botonCrear.addActionListener(this);
         
-        label1.setBounds(900, 25, 300, 20);
+        label1.setBounds(900, 5, 300, 20);
         label2.setBounds(350, 25, 200, 20);
         label3.setBounds(350, 50, 200, 20);
         label4.setBounds(350, 75, 200, 20);
@@ -95,7 +97,8 @@ public class ArbolRojiNegro extends JFrame implements ActionListener{
         label7.setBounds(25, 50, 500, 20);
         label8.setBounds(25, 75, 370,20);
         
-        tfIngreso.setBounds(900, 50, 210, 20);
+        tfIngreso.setBounds(900, 25, 210, 20);
+        tfCadenas.setBounds(900, 50, 210, 20);
         tfRetiro.setBounds(900, 75, 210, 20);
         preOrden.setBounds(500, 25, 350, 20);
         inOrden.setBounds(500, 50, 350, 20);
@@ -197,14 +200,14 @@ public class ArbolRojiNegro extends JFrame implements ActionListener{
             
             if(listaArbol.get(i) != null){
                 
-                numeros[i]= new JLabel(Integer.toString(listaArbol.get(i).llave));
-                numeros[i].setBounds(coorX, coorY, 30, 30);
+                numeros[i]= new JLabel(Integer.toString(listaArbol.get(i).llave) + ", " + listaArbol.get(i).info);
+                numeros[i].setBounds(coorX, coorY, 300, 30);
             
                 JLabel img1 = new JLabel();
                 
                 int escala = (int) (280/((Math.pow(2, (exponente)))));
                 
-                if(listaArbol.get(i).derecha != null){
+                if(listaArbol.get(i).derecha != null && listaArbol.get(i).derecha.llave != 0){
                 
                     
                     ImageIcon imgIcon = new ImageIcon(getClass().getResource("flecha.png"));
@@ -221,7 +224,7 @@ public class ArbolRojiNegro extends JFrame implements ActionListener{
                 
                 img1 = new JLabel();
                 
-                if(listaArbol.get(i).izquierda!= null){
+                if(listaArbol.get(i).izquierda != null && listaArbol.get(i).izquierda.llave != 0){
                 
                     ImageIcon imgIcon = new ImageIcon(getClass().getResource("fder.png"));
             
@@ -244,7 +247,13 @@ public class ArbolRojiNegro extends JFrame implements ActionListener{
 
                 } 
 
-                scrollPane.add(numeros[i]);
+                if(listaArbol.get(i).info != null){
+                
+                    scrollPane.add(numeros[i]);
+                    
+                }
+                
+                
             
             
             } else {
@@ -301,31 +310,30 @@ public class ArbolRojiNegro extends JFrame implements ActionListener{
             
         } else if(e.getSource() == botonInsertar){
 
-            entrada = tfIngreso.getText() + " ";
+            entrada = tfIngreso.getText().replace(" ", "");
+            entrada2 = tfCadenas.getText().replace(" ", "");
             
-            if(!entrada.equals(" ")){
+            String[] listaNumeros = entrada.split(",");
+            String[] listaCadenas = entrada2.split(",");
             
-                String temp="";
-
-                for(int i=0;i<entrada.length();i++){
-
-                    if(entrada.substring(i,i+1).equals(",")|| entrada.substring(i,i+1).equals(" ")){
+            if(!entrada.equals(" ") && (listaNumeros.length == listaCadenas.length)){
+                
+                for(int i=0; i<listaNumeros.length; i++){
                         
-                        arbol.insertar(Integer.parseInt(temp));
-                        temp = "";
-
-                    } else {
-
-                        temp = temp + entrada.substring(i,i+1);
-
-                    }
+                        arbol.insertar(Integer.parseInt(listaNumeros[i]), listaCadenas[i]);
 
                 }
                 
                 arbol.inorden(arbol.getRoot());
                 
+                label5.setText("Datos insertados");
+                
                 dibujar();
             
+            } else {
+                
+                label5.setText("Inserte bien los datos");
+                
             }
             
         } else if(e.getSource() == botonRetirar){
